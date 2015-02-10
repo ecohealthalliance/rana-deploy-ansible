@@ -1,0 +1,14 @@
+---
+
+rana_user: rana
+rana_group: rana
+rana_prefix: "/home/{{ rana_user }}/rana"
+apache_url: http://rana.ecohealth.io
+mongo_url: localhost
+meteor_port: 3001
+meteor_db_name: rana
+mongo_host: localhost
+mongo_port: 27017
+meteor_mongo_port: "{{mongo_port}}"
+meteor_mongo: "mongodb://{{mongo_host}}:{{mongo_port}}/{{ meteor_db_name }}"
+

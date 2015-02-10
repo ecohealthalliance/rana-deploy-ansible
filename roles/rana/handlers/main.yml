@@ -1,0 +1,6 @@
+---
+
+  - name: mongo restarted
+    supervisorctl: name=rana state=restarted
+    sudo: yes
+    sudo_user: root

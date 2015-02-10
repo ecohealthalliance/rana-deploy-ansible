@@ -1,0 +1,12 @@
+[program:rana]
+command=node {{ rana_prefix }}-deploy/bundle/main.js
+environment=METEOR_DB_NAME="{{ meteor_db_name }}",MONGO_URL="{{ meteor_mongo }}",PORT="{{ meteor_port }}",ROOT_URL="{{ apache_url }}",METEOR_SETTINGS='{"public":{"analytics_api_key":"{{analytics_api_key}}"}}'
+directory={{ rana_prefix }}-deploy
+user={{ rana_user }}
+numprocs=1
+autostart=true
+autorestart=true
+startsecs=10
+logfile_maxbytes=150MB
+logfile_backups=10
+loglevel=info

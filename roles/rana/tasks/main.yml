@@ -1,0 +1,65 @@
+---
+
+  - name: Install meteor
+    shell: curl https://install.meteor.com | /bin/sh chdir=/tmp creates=/usr/local/bin/meteor
+    sudo: yes
+    sudo_user: root
+
+  - name: Copy rana source
+    copy: src=rana/ dest={{ rana_prefix }}-source
+    register: rana_copy
+
+  - name: Remove rana-deploy directory
+    file: path={{ rana_prefix }}-deploy state=absent
+    when: rana_copy.changed
+
+  # The source directory is kept separate so it doesn't appear to be changed
+  # because of the subsequent processing
+  - name: Copy rana source to deployment directory
+    command: cp -r {{ rana_prefix }}-source {{ rana_prefix }}-deploy
+    when: rana_copy.changed
+
+  - name: Create config
+    template: src=meteor_config.j2 dest={{ rana_prefix }}-deploy/config mode=0755
+
+  - name: Remove bundle directory
+    file: path={{ rana_prefix }}-deploy/bundle state=absent
+    when: rana_copy.changed
+
+  - name: meteor bundle
+    command: meteor bundle bundle.tgz chdir={{ rana_prefix }}-deploy
+    when: rana_copy.changed
+
+  - name: Unarchive bundle
+    unarchive: src={{ rana_prefix }}-deploy/bundle.tgz dest={{ rana_prefix }}-deploy copy=no
+    when: rana_copy.changed
+
+  - name: Install fibers by npm into bundle
+    npm: name=fibers production=yes path={{ rana_prefix }}-deploy/bundle/programs/server
+    when: rana_copy.changed
+
+  - name: Install underscore by npm into bundle
+    npm: name=underscore production=yes path={{ rana_prefix }}-deploy/bundle/programs/server
+    when: rana_copy.changed
+
+  - name: Install source-map-support by npm into bundle
+    npm: name=source-map-support production=yes path={{ rana_prefix }}-deploy/bundle/programs/server
+    when: rana_copy.changed
+
+  - name: Install semver by npm into bundle
+    npm: name=semver production=yes path={{ rana_prefix }}-deploy/bundle/programs/server
+    when: rana_copy.changed
+
+  - name: Install supervisord config
+    template: src=ranad.conf.j2 dest=/etc/supervisor/conf.d/ranad.conf
+    sudo: yes
+    sudo_user: root
+    notify: reload supervisor
+    with_items:
+      - rana
+
+  - name: Restart rana process
+    supervisorctl: name="rana" state=restarted
+    when: rana_copy.changed
+    sudo: yes
+    sudo_user: root

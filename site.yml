@@ -1,0 +1,12 @@
+---
+
+- hosts: rana
+  roles:
+    - common
+    - apache
+    - mongodb
+    - node
+    - { role: rana, sudo_user: "{{ rana_user }}" }
+  vars_files:
+    - secure.yml
+  sudo: yes

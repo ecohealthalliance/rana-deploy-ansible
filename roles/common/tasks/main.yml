@@ -1,0 +1,17 @@
+---
+
+- name: Install common packages from apt
+  apt: pkg={{item}} state=installed update_cache=yes
+  sudo: True
+  with_items:
+    - git
+    - supervisor
+
+- name: Create rana group
+  user: name={{ rana_group }}
+
+- name: Create rana user
+  user: name={{ rana_user }} group={{ rana_group }} shell=/bin/bash
+
+- name: Create rana environment configuration
+  template: src=config.j2 dest=/home/{{ rana_user }}/rana_config group={{ rana_group }} owner={{ rana_user }}

@@ -1,0 +1,7 @@
+<VirtualHost *:80>
+  ServerName {{ apache_url }}
+  ProxyPreserveHost On
+  RewriteEngine on
+  ProxyPass / http://localhost:{{ meteor_port }}/
+  ProxyPassReverse / http://localhost:{{ meteor_port }}/
+</VirtualHost>
