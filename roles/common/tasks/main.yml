@@ -15,3 +15,7 @@
 
 - name: Create rana environment configuration
   template: src=config.j2 dest=/home/{{ rana_user }}/rana_config group={{ rana_group }} owner={{ rana_user }}
+
+- name: Create github key
+  copy: content="{{git_key}}" dest=~/.ssh/id_rsa mode="0700"
+  sudo_user: "{{ rana_user }}"

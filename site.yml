@@ -6,7 +6,7 @@
     - apache
     - mongodb
     - node
-    - { role: rana, sudo_user: "{{ rana_user }}" }
+    - { role: rana, tags: ["rana"] }
   vars_files:
     - secure.yml
   sudo: yes
