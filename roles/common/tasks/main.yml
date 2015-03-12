@@ -6,6 +6,7 @@
   with_items:
     - git
     - supervisor
+    - python-virtualenv
 
 - name: Create rana group
   user: name={{ rana_group }}
