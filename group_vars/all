@@ -3,7 +3,7 @@
 rana_user: rana
 rana_group: rana
 rana_prefix: "/home/{{ rana_user }}/rana"
-rana_branch: "autocomplete"
+rana_branch: "dev"
 apache_url: http://rana.ecohealth.io
 mongo_url: localhost
 meteor_port: 3001
