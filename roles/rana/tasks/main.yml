@@ -1,20 +1,20 @@
 ---
 
   - name: Sync rana code
-    git: 
+    git:
       repo: git@github.com:ecohealthalliance/rana.git
-      dest: "{{ rana_prefix }}-deploy"
+      dest: "{{ rana_prefix }}"
       accept_hostkey: yes
-      version: "dev"
+      version: "{{rana_branch}}"
     register: rana_sync
     sudo_user: "{{ rana_user }}"
-    
+
   - name: Remove untracked files in rana repo directory
     shell: "git clean -dfx"
     args:
-      chdir: "{{ rana_prefix }}-deploy"
+      chdir: "{{ rana_prefix }}"
     when: rana_sync.changed
-    sudo_user: "{{ rana_user }}"
+    sudo: yes
 
   - name: Remove meteor
     file: path=/usr/local/bin/meteor state=absent
@@ -26,26 +26,39 @@
     when: rana_sync.changed
 
   - name: Create config
-    template: src=meteor_config.j2 dest={{ rana_prefix }}-deploy/config mode=0755
+    template: src=meteor_config.j2 dest={{ rana_prefix }}/config mode=0755
+    when: rana_sync.changed
+    sudo_user: "{{ rana_user }}"
+
+  - pip: name="{{item}}" virtualenv="{{ rana_prefix }}/.venv"
+    with_items:
+      - pymongo
+      - requests
+    when: rana_sync.changed
+
+  - name: Import data from dbpedia
+    command: "{{ rana_prefix }}/.venv/bin/python import_dbpedia_data.py --mongo_url {{meteor_mongo}} --db_name {{meteor_db_name}}"
+    args:
+      chdir: "{{ rana_prefix }}/.scripts"
     when: rana_sync.changed
     sudo_user: "{{ rana_user }}"
 
   - name: meteor bundle
-    command: meteor bundle bundle.tgz chdir={{ rana_prefix }}-deploy
+    command: meteor bundle bundle.tgz chdir={{ rana_prefix }}
     when: rana_sync.changed
     sudo_user: "{{ rana_user }}"
-    
+
   - name: Unarchive bundle
-    unarchive: src={{ rana_prefix }}-deploy/bundle.tgz dest={{ rana_prefix }}-deploy copy=no
+    unarchive: src={{ rana_prefix }}/bundle.tgz dest={{ rana_prefix }} copy=no
     when: rana_sync.changed
     sudo_user: "{{ rana_user }}"
-    
+
   - name: Install npm modules
     command: npm install
     args:
-      chdir: "{{ rana_prefix }}-deploy/bundle/programs/server"
+      chdir: "{{ rana_prefix }}/bundle/programs/server"
     sudo_user: "{{ rana_user }}"
-    
+
   - name: Install supervisord config
     template: src=ranad.conf.j2 dest=/etc/supervisor/conf.d/ranad.conf
     sudo: yes

@@ -6,12 +6,16 @@
   with_items:
     - git
     - supervisor
+    - python-virtualenv
 
 - name: Create rana group
   user: name={{ rana_group }}
 
 - name: Create rana user
   user: name={{ rana_user }} group={{ rana_group }} shell=/bin/bash
+
+- name: Create .ssh directory
+  file: path=~/.ssh group={{ rana_group }} owner={{ rana_user }} state=directory
 
 - name: Create rana environment configuration
   template: src=config.j2 dest=/home/{{ rana_user }}/rana_config group={{ rana_group }} owner={{ rana_user }}
