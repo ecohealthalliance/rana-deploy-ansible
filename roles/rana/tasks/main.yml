@@ -66,6 +66,10 @@
     notify: reload supervisor
     with_items:
       - rana
+      
+  - name: Restart postfix
+    command: service postfix restart
+    sudo: yes
 
   - name: Restart rana process
     supervisorctl: name="rana" state=restarted
