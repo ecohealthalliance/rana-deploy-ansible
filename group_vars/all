@@ -12,3 +12,4 @@ mongo_host: localhost
 mongo_port: 27017
 meteor_mongo_port: "{{mongo_port}}"
 meteor_mongo: "mongodb://{{mongo_host}}:{{mongo_port}}/{{ meteor_db_name }}"
+mail_url: "smtp://localhost"
