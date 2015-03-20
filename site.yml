@@ -3,6 +3,7 @@
 - hosts: rana
   roles:
     - common
+    - postfix
     - apache
     - mongodb
     - node
