@@ -13,9 +13,6 @@
 - name: Create aws credentials
   template: src=aws_config.j2 dest=/home/{{ rana_user }}/.aws/config owner={{ rana_user }} group={{ rana_group }}
 
-- name: Create database directory
-  file: path=/home/{{ rana_user }}/dump state=directory owner={{ rana_user }} group={{ rana_group }}
-
 - name: Copy cron scripts
   template:
     src: "backup_to_s3.j2"
