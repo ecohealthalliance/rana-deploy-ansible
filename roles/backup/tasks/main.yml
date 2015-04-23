@@ -1,0 +1,39 @@
+- name: Install aws client application
+  apt: name={{ item }} state=latest update_cache=yes
+  with_items:
+    - python2.7
+    - python2.7-dev
+    - build-essential
+    - python-software-properties
+    - awscli
+
+- name: Create aws crendentials directory
+  file: path=/home/{{ rana_user }}/.aws state=directory owner={{ rana_user }} group={{ rana_group }}
+
+- name: Create aws credentials
+  template: src=aws_config.j2 dest=/home/{{ rana_user }}/.aws/config owner={{ rana_user }} group={{ rana_group }}
+
+- name: Create database directory
+  file: path=/home/{{ rana_user }}/dump state=directory owner={{ rana_user }} group={{ rana_group }}
+
+- name: Copy cron scripts
+  template:
+    src: "backup_to_s3.j2"
+    dest: "/home/{{ rana_user }}/backup_to_s3"
+    group: "{{ rana_user }}"
+    owner: "{{ rana_group }}"
+    mode: 0755
+
+- name: Create log file for backup job
+  file: path=/home/{{rana_user}}/backup_script_output group={{ rana_group }} owner={{ rana_user }} state=touch
+
+- name: Creating database backup job
+  sudo: yes
+  sudo_user: "{{ rana_user }}"
+  cron:
+    name: "Database backup"
+    user: "{{ rana_user }}"
+    job: "/home/{{ rana_user }}/backup_to_s3"
+    hour: 3
+    minute: 0
+
