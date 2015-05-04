@@ -1,0 +1,9 @@
+#!/bin/bash
+(
+    rm -r /tmp/dbdump
+    mkdir -p /tmp/dbdump
+    cd /tmp/dbdump
+    mongodump --db {{meteor_db_name}}
+    aws s3 cp --recursive dump s3://mantle-data/{{ s3_dump_dir }}
+    echo "S3 backup completed on `date`"
+) >> /home/{{rana_user}}/backup_script_output 2>&1

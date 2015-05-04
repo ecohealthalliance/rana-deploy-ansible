@@ -8,6 +8,7 @@
     - mongodb
     - node
     - { role: rana, tags: ["rana"] }
+    - { role: backup, tags: ["backup"] }
   vars_files:
     - secure.yml
   sudo: yes
