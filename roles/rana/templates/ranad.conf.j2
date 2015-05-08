@@ -1,7 +1,7 @@
 [program:rana]
 command=node {{ rana_prefix }}/bundle/main.js
-environment=METEOR_DB_NAME="{{ meteor_db_name }}",MONGO_URL="{{ meteor_mongo }}",PORT="{{ meteor_port }}",ROOT_URL="{{ apache_url }}",MAIL_URL="{{ mail_url }}"
-directory={{ rana_prefix }},METEOR_SETTINGS='{"public":{"analytics_api_key":"{{analytics_api_key}}"}}'
+environment=METEOR_DB_NAME="{{ meteor_db_name }}",MONGO_URL="{{ meteor_mongo }}",PORT="{{ meteor_port }}",ROOT_URL="{{ apache_url }}",MAIL_URL="{{ mail_url }}",METEOR_SETTINGS='{"public":{"analytics_api_key":"{{analytics_api_key}}"}}'
+directory={{ rana_prefix }}
 user={{ rana_user }}
 numprocs=1
 autostart=true
