@@ -14,3 +14,4 @@ meteor_mongo_port: "{{mongo_port}}"
 meteor_mongo: "mongodb://{{mongo_host}}:{{mongo_port}}/{{ meteor_db_name }}"
 mail_url: "smtp://localhost"
 s3_dump_dir: rana
+analytics_api_key: "{{ analytics_api_key }}"
