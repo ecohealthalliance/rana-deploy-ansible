@@ -9,6 +9,16 @@
       - proxy
       - proxy_http
       - rewrite
+      - ssl
+
+  - name: Create ssl directory
+    file: path=/etc/apache2/ssl state=directory
+
+  - name: Install ssl certificate
+    template: src=apache.crt.j2 dest=/etc/apache2/ssl/apache.crt
+  
+  - name: Install ssl private key
+    template: src=apache.key.j2 dest=/etc/apache2/ssl/apache.key
 
   - name: Configure apache proxy
     template: src=proxy.conf.j2 dest=/etc/apache2/conf-available/proxy.conf
