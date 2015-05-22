@@ -41,12 +41,12 @@
     sudo_user: "{{ rana_user }}"
 
   - name: meteor bundle
-    command: meteor bundle bundle.tgz chdir={{ rana_prefix }}
+    command: meteor build build chdir={{ rana_prefix }}
     when: rana_sync.changed
     sudo_user: "{{ rana_user }}"
 
   - name: Unarchive bundle
-    unarchive: src={{ rana_prefix }}/bundle.tgz dest={{ rana_prefix }} copy=no
+    unarchive: src={{ rana_prefix }}/build/rana.tar.gz dest={{ rana_prefix }} copy=no
     when: rana_sync.changed
     sudo_user: "{{ rana_user }}"
 
