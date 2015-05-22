@@ -4,7 +4,7 @@
 
   RewriteCond %{HTTP:UPGRADE} ^WebSocket$ [NC]
   RewriteCond %{HTTP:CONNECTION} ^Upgrade$ [NC]
-  RewriteRule .* wss://localhost:{{ meteor_port }}%{REQUEST_URI} [P]
+  RewriteRule ^/sockjs/(.*)/websocket wss://%{HTTP_HOST}/sockjs/$1/websocket [NC,R,L]
 
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI}
@@ -15,6 +15,7 @@
   SSLCertificateFile /etc/apache2/ssl/apache.crt
   SSLCertificateKeyFile /etc/apache2/ssl/apache.key
   ProxyPreserveHost On
+  ProxyPassMatch ^/sockjs/(.*)/websocket ws://localhost:{{ meteor_port }}/sockjs/$1/websocket
   ProxyPass / http://localhost:{{ meteor_port }}/
   ProxyPassReverse / http://localhost:{{ meteor_port }}/
 </VirtualHost>
