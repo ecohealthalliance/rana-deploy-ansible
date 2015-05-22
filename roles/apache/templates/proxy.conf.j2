@@ -1,21 +1,28 @@
 <VirtualHost *:80>
-  ServerName {{ apache_url }}
-  RewriteEngine on
-
-  RewriteRule ^/websocket wss://%{HTTP_HOST}/websocket [NC,R,L]
-  RewriteRule ^/sockjs/(.*) wss://%{HTTP_HOST}/sockjs/$1 [NC,R,L]
-  RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L]
-
+    RewriteEngine on
+    ReWriteCond %{SERVER_PORT} !^443$
+    # This allows DDP clients like ObjectiveDDP and Meteor-Unity to connect
+    RewriteRule ^/websocket wss://%{HTTP_HOST}/websocket [NC,R,L]
+    # This allows the meteor webapp to connect
+    RewriteRule ^/sockjs/(.*)/websocket wss://%{HTTP_HOST}/sockjs/$1/websocket [NC,R,L]
+    RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L]
 </VirtualHost>
-<VirtualHost *:443>
-  ServerName {{ apache_url }}
-  SSLEngine on
-  SSLProxyEngine on
-  SSLCertificateFile /etc/apache2/ssl/apache.crt
-  SSLCertificateKeyFile /etc/apache2/ssl/apache.key
-  ProxyPreserveHost On
-  ProxyPass ^/websocket ws://localhost:{{ meteor_port }}/websocket
-  ProxyPass ^/sockjs/ ws://localhost:{{ meteor_port }}/sockjs/
-  ProxyPass / http://localhost:{{ meteor_port }}/
-  ProxyPassReverse / http://localhost:{{ meteor_port }}/
-</VirtualHost>
+<VirtualHost _default_:443>
+    ServerName {{ apache_url }}
+    ## SSL Engine Switch:
+    # Enable/Disable SSL for this virtual host.
+    SSLEngine on
+
+    ## Proxy to port for Meteor app
+    SSLProxyEngine On
+    ProxyRequests Off # Disable forward proxying
+    # This allows DDP clients like ObjectiveDDP and Meteor-Unity to connect
+    ProxyPass /websocket ws://localhost:{{ meteor_port }}/websocket
+    # This allows the meteor webapp to connect
+    ProxyPassMatch ^/sockjs/(.*)/websocket ws://localhost:{{ meteor_port }}/sockjs/$1/websocket
+    ProxyPass / http://localhost:{{ meteor_port }}/
+    ProxyPassReverse / http://localhost:{{ meteor_port }}/
+
+    SSLCertificateFile /etc/apache2/ssl/apache.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+ </VirtualHost>
