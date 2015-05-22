@@ -1,6 +1,11 @@
 <VirtualHost *:80>
   ServerName {{ apache_url }}
   RewriteEngine on
+
+  RewriteCond %{HTTP:UPGRADE} ^WebSocket$ [NC]
+  RewriteCond %{HTTP:CONNECTION} ^Upgrade$ [NC]
+  RewriteRule .* wss://localhost:{{ meteor_port }}%{REQUEST_URI} [P]
+
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI}
 </VirtualHost>

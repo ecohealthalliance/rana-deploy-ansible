@@ -1,13 +1,14 @@
 ---
 
   - name: Install apache
-    apt: name=apache2
+    apt: name=apache2=2.4.10
 
   - name: Enable apache modules
     apache2_module: name={{ item }}
     with_items:
       - proxy
       - proxy_http
+      - proxy_wstunnel
       - rewrite
       - ssl
 
