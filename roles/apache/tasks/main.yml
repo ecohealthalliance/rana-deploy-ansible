@@ -1,7 +1,7 @@
 ---
 
   - name: Install apache
-    apt: name=apache2=2.4.10 update_cache=yes
+    apt: name=apache2
 
   - name: Enable apache modules
     apache2_module: name={{ item }}
