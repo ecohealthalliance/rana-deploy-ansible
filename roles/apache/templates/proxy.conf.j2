@@ -3,7 +3,7 @@
   RewriteEngine on
 
   RewriteRule ^/websocket wss://%{HTTP_HOST}/websocket [NC,R,L]
-  RewriteRule ^/sockjs/(.*)/websocket wss://%{HTTP_HOST}/sockjs/$1/websocket [NC,R,L]
+  RewriteRule ^/sockjs/(.*) wss://%{HTTP_HOST}/sockjs/$1 [NC,R,L]
   RewriteRule ^/(.*) https://%{HTTP_HOST}/$1 [NC,R,L]
 
 </VirtualHost>
@@ -13,8 +13,8 @@
   SSLCertificateFile /etc/apache2/ssl/apache.crt
   SSLCertificateKeyFile /etc/apache2/ssl/apache.key
   ProxyPreserveHost On
-  ProxyPass /websocket ws://localhost:{{ meteor_port }}/websocket
-  ProxyPassMatch ^/sockjs/(.*)/websocket ws://localhost:{{ meteor_port }}/sockjs/$1/websocket
+  ProxyPass ^/websocket ws://localhost:{{ meteor_port }}/websocket
+  ProxyPass ^/sockjs/ ws://localhost:{{ meteor_port }}/sockjs/
   ProxyPass / http://localhost:{{ meteor_port }}/
   ProxyPassReverse / http://localhost:{{ meteor_port }}/
 </VirtualHost>
