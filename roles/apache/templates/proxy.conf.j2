@@ -10,6 +10,7 @@
 <VirtualHost *:443>
   ServerName {{ apache_url }}
   SSLEngine on
+  SSLProxyEngine on
   SSLCertificateFile /etc/apache2/ssl/apache.crt
   SSLCertificateKeyFile /etc/apache2/ssl/apache.key
   ProxyPreserveHost On
