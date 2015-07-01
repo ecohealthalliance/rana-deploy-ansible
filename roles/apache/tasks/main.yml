@@ -21,6 +21,9 @@
   - name: Install ssl private key
     template: src=apache.key.j2 dest=/etc/apache2/ssl/apache.key
 
+  - name: Install comodo ssl bundle
+    template: src=comodo.bundle.j2 dest=/etc/apache2/ssl/comodo.bundle
+
   - name: Configure apache proxy
     template: src=proxy.conf.j2 dest=/etc/apache2/conf-available/proxy.conf
 
