@@ -33,12 +33,12 @@
   - pip: virtualenv="{{ rana_prefix }}/.venv" requirements="{{ rana_prefix }}/.scripts/requirements.txt"
     when: rana_sync.changed
 
-  - name: Import data from dbpedia
-    command: "{{ rana_prefix }}/.venv/bin/python import_dbpedia_data.py --mongo_url {{meteor_mongo}} --db_name {{meteor_db_name}}"
-    args:
-      chdir: "{{ rana_prefix }}/.scripts"
-    when: rana_sync.changed
-    sudo_user: "{{ rana_user }}"
+  # - name: Import data from dbpedia
+  #   command: "{{ rana_prefix }}/.venv/bin/python import_dbpedia_data.py --mongo_url {{meteor_mongo}} --db_name {{meteor_db_name}}"
+  #   args:
+  #     chdir: "{{ rana_prefix }}/.scripts"
+  #   when: rana_sync.changed
+  #   sudo_user: "{{ rana_user }}"
 
   - name: meteor bundle
     command: meteor build build chdir={{ rana_prefix }}
