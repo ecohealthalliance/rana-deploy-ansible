@@ -31,7 +31,7 @@ show collections
 ```
 Check that the user has registered a GRRS accounts:
 ```
-db.users.find({"emails.address":"example@ecohealthalliace.org"}).pretty()
+db.users.find({"emails.address":"example@ecohealthalliance.org"}).pretty()
 ```
 Get the id of the rana group:
 ```
@@ -41,5 +41,5 @@ Update the user's profile with the admin role for the rana group:
 ```
 modifierObj = {}
 modifierObj["roles." + ranaGroupId] = "admin"
-db.users.update({"emails.address":"example@ecohealthalliace.org"}}, {$addToSet: modifierObj})
+db.users.update({"emails.address":"example@ecohealthalliance.org"}, {$addToSet: modifierObj})
 ```
